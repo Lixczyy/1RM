@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1RM Calculator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+</head>
+<body>
+  <main class="card">
+    <h1>1RM Calculator</h1>
+    <p class="subtitle">Estimate your one-rep max from any set.</p>
+
+    <form id="form">
+      <label for="weight">
+        Weight lifted
+        <div class="input-wrap">
+          <input type="number" id="weight" name="weight" min="0" step="any" placeholder="e.g. 100" required />
+          <select id="weightUnit" aria-label="Weight unit">
+            <option value="kg" selected>kg</option>
+            <option value="lb">lb</option>
+          </select>
+        </div>
+      </label>
+
+      <label for="reps">
+        Reps performed
+        <div class="input-wrap">
+          <input type="number" id="reps" name="reps" min="1" step="1" placeholder="e.g. 5" required />
+          <span class="suffix">reps</span>
+        </div>
+      </label>
+
+      <fieldset class="formula-picker">
+        <legend>Formula</legend>
+        {% for key, f in formulas.items() %}
+        <label class="formula-option" data-equation="{{ f.equation }}" data-note="{{ f.note }}">
+          <input type="radio" name="formula" value="{{ key }}" {% if loop.first %}checked{% endif %} />
+          <span class="formula-name">{{ f.name }}</span>
+          <span class="tooltip" role="tooltip">
+            <span class="tooltip-eq">{{ f.equation }}</span>
+            <span class="tooltip-note">{{ f.note }}</span>
+          </span>
+        </label>
+        {% endfor %}
+      </fieldset>
+
+      <button type="submit">Calculate</button>
+    </form>
+
+    <section id="result" class="result" hidden>
+      <div class="big-number">
+        <span id="resultValue">0</span>
+        <span id="resultUnit" class="unit">kg</span>
+      </div>
+      <p class="formula-note" id="formulaNote"></p>
+
+      <h2>Suggested training loads</h2>
+      <table class="percentages">
+        <thead>
+          <tr><th>% of 1RM</th><th>Weight</th></tr>
+        </thead>
+        <tbody id="percentTable"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
